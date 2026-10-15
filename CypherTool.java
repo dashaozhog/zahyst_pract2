@@ -1,16 +1,18 @@
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class CypherTool {
     private static final Scanner scanner = new Scanner(System.in);
+    private static  char[] alphabet = {};
     public static void main(String[] args) {
 
 
         System.out.println("Welcome to the Cypher Tool!");
         System.out.println("Please enter your input:\n" +
                 "Select cypher:\n" +
-                "1. ROT13\n" +
-                "2. Atbash\n" +
-                "3. Vigenere");
+                "1. Caesar\n" +
+                "2. Vigenere");
 
         String cipher = getInput();
 
@@ -19,8 +21,7 @@ public class CypherTool {
         System.out.println("Please enter your input:\n" +
                 "Select cypher:\n" +
                 "1. ROT13\n" +
-                "2. Atbash\n" +
-                "3. Vigenere");
+                "2. Vigenere");
         cipher = getInput();
     }
 
@@ -44,37 +45,37 @@ public class CypherTool {
                 System.out.println("Exiting...");
                 break;}
         System.out.println("Enter your input(EXIT to exit):");
-         input = getInput();
+            input = getInput();
+         System.out.println("Enter your key:");
+         String key = getInput();
+         int keyInt = 0;
         switch(cipher){
 
-
             case "1":
+                try{
+                    keyInt = parseInt(key);
+                }
+                catch(Exception ex){
+                    System.out.println("Для шифру Цезаря введіть число");
+                    key = getInput();
+                    keyInt = parseInt(key);
+                }
                 if(oper.equals("1")) {
-                    System.out.println("Your encrypted input is: " + encryptRot13(input));
+                    System.out.println("Зашифроване повідомлення: " + encryptCaesar(input, keyInt));
                     break;
                 }
                 else {
-                    System.out.println("Your decrypted input is: " + decryptRot13(input));
+                    System.out.println("Дешифроване повідомлення: " + decryptCaesar(input, keyInt));
                     break;
                 }
+
             case "2":
                 if(oper.equals("1")) {
-                    System.out.println("Your encrypted input is: " + encryptAtbash(input));
+                    System.out.println("Your encrypted input is: " + encryptVigenere(input, key));
                     break;
                 }
                 else {
-                    System.out.println("Your decrypted input is: " + decryptAtbash(input));
-                    break;
-                }
-            case "3":
-                System.out.println("Enter your phrase:");
-                String phrase = getInput();
-                if(oper.equals("1")) {
-                    System.out.println("Your encrypted input is: " + encryptVigenere(input, phrase));
-                    break;
-                }
-                else {
-                    System.out.println("Your decrypted input is: " + decryptVigenere(input, phrase));
+                    System.out.println("Your decrypted input is: " + decryptVigenere(input, key));
                     break;
                 }
                 default:
@@ -91,43 +92,17 @@ public class CypherTool {
         return scanner.nextLine();
     }
 
-    public static String encryptRot13(String s) {
+    public static String encryptCaesar(String s, int key) {
         String res = "";
         for(char c:s.toCharArray()) {
             c = Character.toLowerCase(c);
-            if(c>='a' && c<='m') res+= (c+=13);
-            else if(c>'m'&&c<='z') res+=(c-=13);
-            else res+=c;
+            if( (c+key)>'я' ) {res+=(('я'-c)+'а'+key);}
+            else res+=(char)(c+key);
         }
         return res;
     }
-    public static String decryptRot13(String s) {
-        String res = "";
-        for(char c:s.toCharArray()) {
-            c = Character.toLowerCase(c);
-            if(c>='a' && c<='m') res+= (c-=13);
-            else if(c>'m'&&c<='z') res+=(c+=13);
-            else res+=c;
-        }
-        return res;
-    }
-
-    public static String encryptAtbash(String s) {
-        String res = "";
-        for(char c:s.toCharArray()) {
-            c = Character.toLowerCase(c);
-            if(c>='a' && c<='z'){
-            res+= (char) ('a' + 'z' - c);
-            }
-            else res+=c;
-        }
-        return res;
-    }
-
-
-    public static String decryptAtbash(String s) {
-
-        return encryptAtbash(s);
+    public static String decryptCaesar(String s, int key) {
+        return encryptCaesar(s, key*-1);
     }
 
 
